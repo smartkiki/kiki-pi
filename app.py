@@ -27,7 +27,7 @@ def message_handler():
 
 
 
-message_handler()
+#message_handler()
 
 
 @app.route('/')
@@ -39,8 +39,10 @@ def hello_world():
 def get_message_from_chatbot():
 	if not request.json:
 		print "Didnt get a json request. Bad request"
+		return str(404)
 	else:
 		print request.json
 		json_request = json.dumps(request.json)
 		print json_request
+		return str(200)
 	print "got to get message from chatbot"
