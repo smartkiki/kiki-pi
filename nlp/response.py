@@ -36,3 +36,8 @@ class Response(object):
 			parsedString = "Sorry, I didn't get you."
 
 		return parsedString
+
+	def get_intent(self, user_req):
+		#Edla please get intent and entities and send them both as follows:
+		# return intent, entities <- here entities is an array of entities
+		pass

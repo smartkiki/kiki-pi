@@ -5,6 +5,7 @@ from stt import speech_recognizer as stt
 import os
 
 app = Flask(__name__)
+nlp_handler = nlp.Response()
 
 def message_handler():
 		"""
@@ -18,7 +19,6 @@ def message_handler():
 			TEXT PROCESSING CODE
 			Parses text and returns response string.
 			"""
-			nlp_handler = nlp.Response()
 			responseText = nlp_handler.get_response(user_input)
 			
 			#Removing single quotes in output string and converting text to speech
@@ -33,3 +33,14 @@ message_handler()
 @app.route('/')
 def hello_world():
     return 'hello world'
+
+
+@app.route('/chatbot', methods=['POST'])
+def get_message_from_chatbot():
+	if not request.json:
+		print "Didnt get a json request. Bad request"
+	else:
+		print request.json
+		json_request = json.dumps(request.json)
+		print json_request
+	print "got to get message from chatbot"
