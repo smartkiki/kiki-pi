@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from nlp import response as nlp
 from stt import speech_recognizer as stt
 from services import intent_handler as ih
+from services import toggle_service as ts
 import os
 
 app = Flask(__name__)
@@ -28,7 +29,7 @@ def message_handler():
 
 
 
-message_handler()
+#message_handler()
 
 
 @app.route('/')
@@ -52,5 +53,22 @@ def get_message_from_chatbot():
 		resp = {"message" : mess}
 		resp["statusCode"] = "200"
 		print "seding the following back:"
+		print resp
+		return jsonify(resp)
+
+@app.route('/postback', methods=['POST'])
+def get_postback_prefrences():
+	if not request.json:
+		print "Didnt get a json request. Bad request"
+		resp = {"message" : "error. json wasnt sent", "statusCode" : "400"}
+		return jsonify(resp)
+	else:
+		print request.json
+		print type(request.json)
+		mess = ts.toggle_service(request.json['payload_type'])
+		os.system("say '%s'" % mess)
+		resp = {"message" : mess}
+		resp['statusCode'] = "200"
+		print "sending the following back:"
 		print resp
 		return jsonify(resp)
