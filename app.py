@@ -1,7 +1,8 @@
 import sys, json, requests
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from nlp import response as nlp
 from stt import speech_recognizer as stt
+from services import intent_handler as ih
 import os
 
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def message_handler():
 
 
 
-#message_handler()
+message_handler()
 
 
 @app.route('/')
@@ -42,7 +43,14 @@ def get_message_from_chatbot():
 		return str(404)
 	else:
 		print request.json
-		json_request = json.dumps(request.json)
-		print json_request
-		return str(200)
-	print "got to get message from chatbot"
+		print type(request.json)
+		json_request = request.json
+		message = json_request['message']
+		intent, entities = "weather", "London" #nlp_handler.get_intent(message)
+		mess = ih.intent_handler(intent, entities)
+		os.system("say '%s'" % mess)
+		resp = {"message" : mess}
+		resp["statusCode"] = "200"
+		print "seding the following back:"
+		print resp
+		return jsonify(resp)

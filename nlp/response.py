@@ -1,7 +1,7 @@
 import sys, json, requests
 from flask import Flask, request
 
-CLIENT_ACCESS_TOKEN = '66536bec831d476490738b7c7860ff73'
+CLIENT_ACCESS_TOKEN = 'f938c1b9f7b4467ebbde42c46d8338a6'
 
 try:
     import apiai
@@ -49,6 +49,7 @@ class Response(object):
 		# Receiving the response.
 		response = json.loads(request.getresponse().read().decode('utf-8'))
 		responseStatus = response['status']['code']
+		print response
 		intent = response['metadata']['intentName']
 		entities = []
 
