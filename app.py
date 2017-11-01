@@ -25,7 +25,7 @@ def message_handler():
 			
 			#Removing single quotes in output string and converting text to speech
 			output = responseText #.translate(str) #.maketrans({"'":None}))
-			os.system("say '%s'" % output)
+			os.system("say -v Daniel '%s'" % output)
 
 
 
@@ -44,15 +44,14 @@ def get_message_from_chatbot():
 		return str(404)
 	else:
 		print request.json
-		print type(request.json)
 		json_request = request.json
 		message = json_request['message']
-		intent, entities = "weather", "London" #nlp_handler.get_intent(message)
+		intent, entities = "weather", "West Lafayette" #nlp_handler.get_intent(message)
 		mess = ih.intent_handler(intent, entities)
-		os.system("say '%s'" % mess)
+		os.system("say -v Daniel '%s'" % mess)
 		resp = {"message" : mess}
 		resp["statusCode"] = "200"
-		print "seding the following back:"
+		print "sending the following back:"
 		print resp
 		return jsonify(resp)
 
@@ -64,9 +63,8 @@ def get_postback_prefrences():
 		return jsonify(resp)
 	else:
 		print request.json
-		print type(request.json)
 		mess = ts.toggle_service(request.json['payload_type'])
-		os.system("say '%s'" % mess)
+		os.system("say -v Daniel '%s'" % mess)
 		resp = {"message" : mess}
 		resp['statusCode'] = "200"
 		print "sending the following back:"

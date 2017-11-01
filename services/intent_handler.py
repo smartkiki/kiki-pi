@@ -9,7 +9,7 @@ def intent_handler(intent, entities):
 		print "Got to weather intent"
 		city = entities
 		weather = ws.get_city_weather(city)
-		return "The temperature in %s is %d degrees Celsius" % (city, int(weather - 273.15))
+		return "The temperature in %s is %d degrees Celsius" % (city, int(round(weather - 273.15)))
 	else:
 		#handle other intents
 		print "got to some other intent"
