@@ -1,5 +1,6 @@
 import sys, json, requests
 from flask import Flask, request
+import os
 
 CLIENT_ACCESS_TOKEN = 'f938c1b9f7b4467ebbde42c46d8338a6'
 
@@ -50,11 +51,13 @@ class Response(object):
 		response = json.loads(request.getresponse().read().decode('utf-8'))
 		responseStatus = response['status']['code']
 		print response
-		intent = response['metadata']['intentName']
-		entities = []
 
-		for i in response['result']['parameters']:
-			entities.append(i)
+		if (responseStatus == 200):
+			intent = response['result']['metadata']['intentName']
+			entities = []
+
+			for i in response['result']['parameters']['location']:
+				entities.append(response['result']['parameters']['location'][i])
 
 		return intent, entities
 		
