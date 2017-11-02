@@ -14,7 +14,9 @@ def toggle_service(payload_text):
 		os.system("osascript -e 'set volume 0'")
 		message = "Speaker has been disabled"
 	elif payload_text == "MIC_OFF":
+		os.system("osascript -e 'set volume input volume 0'")
 		message = "Microphone has been disabled"
 	elif payload_text == "MIC_ON":
+		os.system("osascript -e 'set volume input volume 100'")
 		message = "Microphone has been enabled"
 	return message
