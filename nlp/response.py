@@ -1,5 +1,8 @@
-import sys, json, requests
+import sys
+import simplejson as json
+import requests
 from flask import Flask, request
+import os
 
 CLIENT_ACCESS_TOKEN = 'f938c1b9f7b4467ebbde42c46d8338a6'
 
@@ -49,12 +52,15 @@ class Response(object):
 		# Receiving the response.
 		response = json.loads(request.getresponse().read().decode('utf-8'))
 		responseStatus = response['status']['code']
-		print response
-		intent = response['metadata']['intentName']
-		entities = []
+		parsedString = ''
 
-		for i in response['result']['parameters']:
-			entities.append(i)
+		if (responseStatus == 200):
+			intent = response['result']['metadata']['intentName']
+			parsedString = response['result']['fulfillment']['speech']
+			entities = response['result']['parameters']
 
-		return intent, entities
+		else:
+			parsedString = "Sorry, I didn't get you."		
+
+		return intent, entities, parsedString
 		
