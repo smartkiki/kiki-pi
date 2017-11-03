@@ -22,7 +22,7 @@ def get_message_from_chatbot():
         print "Didnt get a json request. Bad request"
         return str(404)
     else:
-        print request.json
+        print(request.json)
         json_request = request.json
         message = json_request['message']
         intent, entities = nlp_handler.get_intent(message)
@@ -30,8 +30,8 @@ def get_message_from_chatbot():
         os.system("say -v Lekha '%s'" % mess)
         resp = {"message": mess}
         resp["statusCode"] = "200"
-        print "sending the following back:"
-        print resp
+        print("sending the following back:")
+        print(resp)
         return jsonify(resp)
 
 
@@ -42,7 +42,7 @@ def get_postback_prefrences():
         resp = {"message": "error. json wasnt sent", "statusCode": "400"}
         return jsonify(resp)
     else:
-        print request.json
+        print(request.json)
         mess = ts.toggle_service(request.json['payload_type'])
         print("\n\ntoggled service\n\n")
         os.system("say -v Lekha '%s'" % mess)
