@@ -10,13 +10,16 @@ def intent_handler(intent, entities):
 	if intent == 'weather':
 		#handle weather
 		print "Got to weather intent"
-		city = entities
+		#print entities
+
+		city = entities['location']['city']
 		weather = ws.get_city_weather(city)
 		return "The temperature in %s is %d degrees Celsius" % (city, int(round(weather - 273.15)))
 	elif intent == 'alarm':
 		#alarm handling here
-		entities = "21:44:00"
-		alarm_time = datetime.datetime.strptime(entities, '%H:%M:%S').time()
+		print entities
+		time = entities['time']
+		alarm_time = datetime.datetime.strptime(time, '%H:%M:%S').time()
 		p = Process(target=als.alarm_process, args=(alarm_time,))
 		p.start()
 		return "Set an alarm for %s" % alarm_time.strftime("%I:%M %p")

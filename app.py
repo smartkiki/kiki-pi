@@ -26,9 +26,10 @@ def get_message_from_chatbot():
 		print request.json
 		json_request = request.json
 		message = json_request['message']
-		intent, entities = "weather", "Cuba" #nlp_handler.get_intent(message)
+		#intent, entities = "weather", "Cuba"
+		intent, entities = nlp_handler.get_intent(message)
 		mess = ih.intent_handler(intent, entities)
-		os.system("say -v Daniel '%s'" % mess)
+		os.system("say -v Lekha '%s'" % mess)
 		resp = {"message" : mess}
 		resp["statusCode"] = "200"
 		print "sending the following back:"
@@ -46,7 +47,7 @@ def get_postback_prefrences():
 		print request.json
 		mess = ts.toggle_service(request.json['payload_type'])
 		print "\n\ntoggled service\n\n"
-		os.system("say -v Daniel '%s'" % mess)
+		os.system("say -v Lekha '%s'" % mess)
 		resp = {"message" : mess}
 		resp['statusCode'] = "200"
 		print "sending the following back:"
@@ -66,22 +67,27 @@ def message_handler():
 		TEXT PROCESSING CODE
 		Parses text and returns response string.
 		"""
-		responseText = nlp_handler.get_response(user_input)
+		intent, entities, mess = nlp_handler.get_intent(user_input)
+		
+		#	mess = nlp_handler.get_response(user_input)
+		#else:
+		if intent != "Greeting":
+			mess = ih.intent_handler(intent, entities)
 			
 		#Removing single quotes in output string and converting text to speech
-		output = responseText #.translate(str) #.maketrans({"'":None}))
+		output = mess #.translate(str) #.maketrans({"'":None}))
 		print "\n\n output is : %s \n\n" % output
 		output.replace("'", "")
 		print "\n\n output is : %s \n\n" % output
-		os.system("say -v Daniel '%s'" % output)
+		os.system("say -v Lekha '%s'" % output)
 
-def signal_handler(signal, frame):
+"""def signal_handler(signal, frame):
     print '\n\nYou pressed Ctrl+C!\n\n'
     curr = os.getpid()
     print "parent pid : %d" % curr
     for p in processes:
     	p.terminate()
-    sys.exit(0)
+    sys.exit(0)"""
 
 processes = []
 
@@ -91,4 +97,4 @@ p.start()
 print "\n\n started another process with process name: %s\n process pid: %d \n\n" % (p.name, p.pid)
 app.run(debug=True, use_reloader=False)
 #p.join()
-signal.signal(signal.SIGINT, signal_handler)
+#signal.signal(signal.SIGINT, signal_handler)

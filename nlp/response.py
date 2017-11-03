@@ -1,4 +1,6 @@
-import sys, json, requests
+import sys
+import simplejson as json
+import requests
 from flask import Flask, request
 import os
 
@@ -50,14 +52,15 @@ class Response(object):
 		# Receiving the response.
 		response = json.loads(request.getresponse().read().decode('utf-8'))
 		responseStatus = response['status']['code']
-		print response
+		parsedString = ''
 
 		if (responseStatus == 200):
 			intent = response['result']['metadata']['intentName']
-			entities = []
+			parsedString = response['result']['fulfillment']['speech']
+			entities = response['result']['parameters']
 
-			for i in response['result']['parameters']['location']:
-				entities.append(response['result']['parameters']['location'][i])
+		else:
+			parsedString = "Sorry, I didn't get you."		
 
-		return intent, entities
+		return intent, entities, parsedString
 		
