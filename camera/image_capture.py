@@ -1,6 +1,4 @@
-from datetime import datetime
 import os
-import tempfile
 
 
 COMMAND_STRING = "raspistill -o {}"
@@ -13,4 +11,3 @@ def capture():
     os.system(command)
 
     return IMAGE_FILE
-

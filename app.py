@@ -1,14 +1,18 @@
-from flask import Flask, request, jsonify
-from nlp import response as nlp
-from stt import speech_recognizer as stt
-from services import intent_handler as ih
-from services import toggle_service as ts
-from multiprocessing import Process
 import os
 
-app = Flask(__name__)
+from multiprocessing import Process
 
-nlp_handler = nlp.Response()
+from flask import Flask
+from flask import request
+from flask import jsonify
+
+from nlp.parser import get_intent
+from stt import speech_recognizer as stt
+from tts import handler as tts
+from intents import toggle_service as ts
+from intents.handler import handle_intent
+
+app = Flask(__name__)
 
 
 @app.route('/')
@@ -19,38 +23,48 @@ def hello_world():
 @app.route('/chatbot', methods=['POST'])
 def get_message_from_chatbot():
     if not request.json:
-        print "Didnt get a json request. Bad request"
+        print("Didnt get a json request. Bad request")
         return str(404)
     else:
         print(request.json)
         json_request = request.json
         message = json_request['message']
-        intent, entities = nlp_handler.get_intent(message)
-        mess = ih.intent_handler(intent, entities)
-        os.system("say -v Lekha '%s'" % mess)
-        resp = {"message": mess}
-        resp["statusCode"] = "200"
+
+        _, intent, entities = get_intent(message)
+        message = handle_intent(intent, entities)
+        tts.speak(message)
+
+        response = {
+            "message": message,
+            "statusCode": 200,
+        }
+
         print("sending the following back:")
-        print(resp)
-        return jsonify(resp)
+        print(response)
+        return jsonify(response)
 
 
 @app.route('/postback', methods=['POST'])
 def get_postback_prefrences():
     if not request.json:
         print("Didnt get a json request. Bad request")
-        resp = {"message": "error. json wasnt sent", "statusCode": "400"}
-        return jsonify(resp)
+        response = {
+            "message": "error. json wasnt sent",
+            "statusCode": "400",
+        }
+        return jsonify(response)
     else:
         print(request.json)
-        mess = ts.toggle_service(request.json['payload_type'])
+        message = ts.toggle_service(request.json['payload_type'])
         print("\n\ntoggled service\n\n")
-        os.system("say -v Lekha '%s'" % mess)
-        resp = {"message": mess}
-        resp['statusCode'] = "200"
+        tts.speak(message)
+        response = {
+            "message": message,
+            "statusCode": 200,
+        }
         print("sending the following back:")
-        print(resp)
-        return jsonify(resp)
+        print(response)
+        return jsonify(response)
 
 
 def message_handler():
@@ -58,17 +72,17 @@ def message_handler():
         p = os.getpid()
         print "pid which starts off the listening functionality: %d\n\n" % p
         user_input = stt.wait_for_input()
-        intent, entities, mess = nlp_handler.get_intent(user_input)
+        intent, entities, mess = get_intent(user_input)
 
         if intent != "Greeting":
-            mess = ih.intent_handler(intent, entities)
+            mess = handle_intent(intent, entities)
 
         # Removing single quotes in output string and converting text to speech
         output = mess
         print("\n\n output is : %s \n\n" % output)
         output.replace("'", "")
         print("\n\n output is : %s \n\n" % output)
-        os.system("say -v Lekha '%s'" % output)
+        tts.speak(output)
 
 
 if __name__ == '__main__':
