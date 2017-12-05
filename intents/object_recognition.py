@@ -4,6 +4,7 @@ from ..camera.image_capture import capture
 
 
 OBJECT_RECOGNITION_URL = 'http://localhost/object_recognition'
+CHATBOT_URL = 'http://localhost:8082/uploadimage'
 
 
 def execute_intent(entities):

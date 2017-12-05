@@ -18,7 +18,7 @@ def execute_intent(entities):
 		r = requests.post(CHATBOT_URL, json=data)
 		return FOUND_RESULTS
 	else:
-		return NOT_FOUND 
+		return NOT_FOUND
 
 
 def _create_json_for_request(results):
