@@ -1,57 +1,39 @@
-import apiai
-import simplejson as json
+from recastai import Request
 
 
-CLIENT_ACCESS_TOKEN = 'f938c1b9f7b4467ebbde42c46d8338a6'
+CLIENT_ACCESS_TOKEN = '5b6df69bc243a4318f6d097adc27d9cc'
 DEFAULT_RESPONSE_STRING = "Sorry I didn't get that"
 DEFAULT_INTENT = None
 DEFAULT_ENTITIES = None
 
-ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
+client = Request(CLIENT_ACCESS_TOKEN, 'en')
 
-
+"""
 def get_response(user_req):
     request = _create_request(user_req)
     response = json.load(request.getresponse())
     response_string = _parse_response_string(response)
 
     return response_string
+"""
 
 
 def get_intent(user_req):
-    request = _create_request(user_req)
-    response = json.load(request.getresponse())
-
-    response_string = _parse_response_string(response)
+    response = _send_request(user_req)
     intent = _parse_intent(response)
     entities = _parse_entities(response)
 
-    return response_string, intent, entities
+    return intent, entities
 
 
-def _create_request(user_req):
-    request = ai.text_request()
-    request.query = user_req
+def _send_request(user_req):
+    response = client.analyse_text(user_req)
 
-    return request
-
-
-def _parse_response_string(response):
-    status = response['status']['code']
-
-    if status is 200:
-        parsed_response = response['result']['fulfillment']['speech']
-    else:
-        parsed_response = DEFAULT_RESPONSE_STRING
-
-    return parsed_response
-
+    return response
 
 def _parse_intent(response):
-    status = response['status']['code']
-
-    if status is 200:
-        parsed_intent = response['result']['metadata']['intentName']
+    if response.intent:
+        parsed_intent = response.intent.slug
     else:
         parsed_intent = DEFAULT_INTENT
 
@@ -59,10 +41,8 @@ def _parse_intent(response):
 
 
 def _parse_entities(response):
-    status = response['status']['code']
-
-    if status is 200:
-        parsed_entities = response['result']['parameters']
+    if response.entities:
+        parsed_entities = response.entities
     else:
         parsed_entities = DEFAULT_ENTITIES
 

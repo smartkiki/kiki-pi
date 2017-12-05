@@ -3,12 +3,21 @@ import alarm
 import take_image
 import object_recognition
 import default
+import greetings
+import music
+import search
+import calendar
 
 INTENT_MAP = {
-    'weather': weather,
-    'alarm': alarm,
+	'greetings' : greetings,
+    'get-weather' : weather,
+    'alarms': alarm,
     'take_image': take_image,
     'object_recognition': object_recognition,
+    'music' : music,
+    'web_search' : search,
+    'calendar' : calendar,
+    #'uber' : uber,
 }
 
 

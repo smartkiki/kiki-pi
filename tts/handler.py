@@ -1,9 +1,9 @@
 import os
 
-VOICE = 'Lekha'
-COMMAND_STRING = 'say -v {} {}'.format(VOICE)
+VOICE = 'Daniel'
+COMMAND_STRING = 'say -v {} {}'
 
 
 def speak(message):
-    command = COMMAND_STRING.format(message)
+    command = COMMAND_STRING.format(VOICE, message)
     os.system(command)
