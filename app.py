@@ -30,7 +30,7 @@ def get_message_from_chatbot():
         json_request = request.json
         message = json_request['message']
 
-        _, intent, entities = get_intent(message)
+        intent, entities = get_intent(message)
         message = handle_intent(intent, entities)
         tts.speak(message)
 
@@ -72,10 +72,8 @@ def message_handler():
         p = os.getpid()
         print "pid which starts off the listening functionality: %d\n\n" % p
         user_input = stt.wait_for_input()
-        intent, entities, mess = get_intent(user_input)
-
-        if intent != "Greeting":
-            mess = handle_intent(intent, entities)
+        intent, entities = get_intent(user_input)
+        mess = handle_intent(intent, entities)
 
         # Removing single quotes in output string and converting text to speech
         output = mess
@@ -85,8 +83,6 @@ def message_handler():
         tts.speak(output)
 
 
-if __name__ == '__main__':
-
-    p = Process(target=message_handler, args=())
-    p.start()
-    app.run(debug=True, use_reloader=False)
+p = Process(target=message_handler, args=())
+p.start()
+app.run(debug=True, use_reloader=False)
