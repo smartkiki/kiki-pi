@@ -1,11 +1,11 @@
 from ..camera.image_capture import capture
 import requests
 
-CHATBOT_URL = 'http://localhost:8082/uploadimage'
+CHATBOT_URL = 'https://6f62b3c3.ngrok.io/uploadimage'
 
 def execute_intent(entities):
-    #image_name = capture()
-    #files = {'file': open(image_name)}
+    image_name = capture()
+    files = {'file': open(image_name)}
     print "Got to image capture intent"
     data = _create_json_for_request()
     response = requests.post(CHATBOT_URL, json=data)
