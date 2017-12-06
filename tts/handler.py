@@ -1,7 +1,8 @@
 import os
+import time
 
-VOICE = 'Daniel'
-COMMAND_STRING = 'say -v {} {}'
+VOICE = 'en+f5 -s 155'
+COMMAND_STRING = 'espeak -v {} {}'
 
 
 def speak(message):
