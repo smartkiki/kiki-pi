@@ -3,7 +3,7 @@ import requests
 from ..camera.image_capture import capture
 
 
-OBJECT_RECOGNITION_URL = 'http://web.kiki.28479259.svc.dockerapp.io/'
+OBJECT_RECOGNITION_URL = 'http://web.kiki.28479259.svc.dockerapp.io/object_recognition'
 
 
 def execute_intent(entities):
